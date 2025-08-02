@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import SplashScreen from "../screens/SplashScreen";
 import LoginScreen from "../screens/LoginScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SignupScreen from "../screens/SignupScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -36,9 +37,14 @@ export default function AppNavigator() {
       {isLoading ? (
         <Stack.Screen name="Splash" component={SplashScreen} />
       ) : !isLoggedIn ? (
-        <Stack.Screen name="Login">
-          {(props) => <LoginScreen {...props} onLogin={handleLogin} />}
-        </Stack.Screen>
+        <>
+          <Stack.Screen name="Login">
+            {(props) => <LoginScreen {...props} onLogin={handleLogin} />}
+          </Stack.Screen>
+          <Stack.Screen name="Signup">
+            {(props) => <SignupScreen {...props} onSignup={handleLogin} />}
+          </Stack.Screen>
+        </>
       ) : (
         <Stack.Screen name="Main">
           {(props) => <TabNavigator {...props} onLogout={handleLogout} />}
