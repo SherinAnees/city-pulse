@@ -1,14 +1,13 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-
 const firebaseConfig = {
-  apiKey: "AIzaSyCd2t0B2A7za823I2Hj1HgbX23T2NCM6w0",
-  authDomain: "city-pulse-93213.firebaseapp.com",
-  projectId: "city-pulse-93213",
-  storageBucket: "city-pulse-93213.firebasestorage.app",
-  messagingSenderId: "1049378130571",
-  appId: "1:1049378130571:web:991ab244bdc3cb875ba28e"
+  apiKey: "AIzaSyCIgz1uHDpFyPfnFwlDfvkG8fwcmN21IB8",
+  authDomain: "city-pulse-d68d4.firebaseapp.com",
+  projectId: "city-pulse-d68d4",
+  storageBucket: "city-pulse-d68d4.firebasestorage.app",
+  messagingSenderId: "623279986666",
+  appId: "1:623279986666:web:6ff5f75a8a5c2269e6c493"
 };
 
 const app = initializeApp(firebaseConfig);

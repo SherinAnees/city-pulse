@@ -10,13 +10,7 @@ type SplashScreenNavigationProp = NativeStackNavigationProp<
   "Splash"
 >;
 
-export default function SplashScreen() {
-  const navigation = useNavigation<SplashScreenNavigationProp>();
-
-  const handleGetStarted = () => {
-    navigation.replace("Login");
-  };
-
+export default function SplashScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to City Pulse</Text>
@@ -24,7 +18,10 @@ export default function SplashScreen() {
         Discover exciting local events near you!
       </Text>
 
-      <TouchableOpacity style={styles.button} onPress={handleGetStarted}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("Login")}
+      >
         <Text style={styles.buttonText}>Get Started</Text>
       </TouchableOpacity>
     </View>

@@ -8,23 +8,23 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../redux/store";
+import { signupUser } from "../redux/slices/authSlice";
 
-export default function SignupScreen({
-  navigation,
-  onSignup,
-}: {
-  navigation: any;
-  onSignup: (email: string) => void;
-}) {
+export default function SignupScreen({ navigation }: any) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleSubmit = () => {
-    if (name && email && password) {
-      onSignup(email);
-    } else {
-      Alert.alert("Error", "All fields are required.");
+  const dispatch = useDispatch<AppDispatch>();
+  const handleSignup = async () => {
+    try {
+      const res = await dispatch(
+        signupUser({ name, email, password })
+      ).unwrap();
+      navigation.replace("Home");
+    } catch (error) {
+      console.error("Login failed:", error);
     }
   };
 
@@ -52,10 +52,13 @@ export default function SignupScreen({
         style={styles.input}
       />
 
-      <Button title="Sign Up" onPress={handleSubmit} />
+      <Button title="Sign Up" onPress={handleSignup} />
 
       <TouchableOpacity onPress={() => navigation.navigate("Login")}>
         <Text style={styles.link}>Already have an account? Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <Text style={styles.subLine}>Continue as Guest</Text>
       </TouchableOpacity>
     </View>
   );
@@ -72,4 +75,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   link: { marginTop: 20, color: "#007AFF", textAlign: "center" },
+  subLine: { marginTop: 20, color: "#f6307fff", textAlign: "center" },
 });

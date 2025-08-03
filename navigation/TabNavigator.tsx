@@ -5,7 +5,7 @@ import FavoritesScreen from "../screens/FavoritesScreen";
 
 const Tab = createBottomTabNavigator();
 
-export default function TabNavigator({ onLogout }: { onLogout: () => void }) {
+export default function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -22,9 +22,7 @@ export default function TabNavigator({ onLogout }: { onLogout: () => void }) {
         },
       })}
     >
-      <Tab.Screen name="Home">
-        {(props) => <HomeScreen {...props} onLogout={onLogout} />}
-      </Tab.Screen>
+      <Tab.Screen name="Home" component={HomeScreen} />
 
       <Tab.Screen name="Favorites" component={FavoritesScreen} />
     </Tab.Navigator>
