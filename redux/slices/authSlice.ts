@@ -4,11 +4,17 @@ import {
   signInWithEmailAndPassword,
   signOut
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
 
+interface User {
+  uid: string;
+  email: string;
+  name?: string;
+}
+
 interface AuthState {
-  user: any;
+  user: User | null;
   loading: boolean;
   error: string | null;
 }
@@ -34,7 +40,16 @@ export const loginUser = createAsyncThunk(
   async ({ email, password }: { email: string; password: string }, thunkAPI) => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-    return { uid: user.uid, email: user.email };
+
+    const docRef = doc(db, "users", user.uid);
+    const userDoc = await getDoc(docRef);
+    const userData = userDoc.data();
+
+    return {
+      uid: user.uid,
+      email: user.email || "",
+      name: userData?.name || "User",
+    };
   }
 );
 
@@ -60,8 +75,17 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || null;
       })
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
         state.user = action.payload;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || null;
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
