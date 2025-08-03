@@ -30,7 +30,7 @@ export default function HomeScreen({ navigation }: any) {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.welcomeText}>
-          Welcome {user?.name ? user.name : "Guest"}!
+          Welcome {user?.name ? user.name : "Guest"} !
         </Text>
         {user && (
           <TouchableOpacity onPress={handleLogout}>

@@ -8,10 +8,18 @@ import LoginScreen from "../screens/LoginScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import HomeScreen from "../screens/HomeScreen";
 import SignupScreen from "../screens/SignupScreen";
+import { useDispatch } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const guestFaves = JSON.parse(
+      localStorage.getItem("guest_favourites") || "[]"
+    );
+    dispatch({ type: "favourites/fetch/fulfilled", payload: guestFaves });
+  }, []);
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Splash" component={SplashScreen} />

@@ -1,6 +1,13 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { EventItem } from "../types/event";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
+import {
+  saveFavouritesToFirestore,
+  toggleFavourite,
+} from "../redux/slices/favouriteSlice";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
   event: EventItem;
@@ -8,7 +15,33 @@ interface Props {
 
 const EventCard = ({ event }: Props) => {
   const imageUrl = event.images[0]?.url;
+  const dispatch = useDispatch<AppDispatch>();
+  const { favouriteIds } = useSelector((state: RootState) => state.favourites);
+  const user = useSelector((state: RootState) => state.auth.user);
 
+  const isFavourite = favouriteIds.includes(event.id);
+
+  const toggle = () => {
+    dispatch(toggleFavourite(event.id));
+    if (user) {
+      dispatch(
+        saveFavouritesToFirestore({
+          uid: user.uid,
+          favourites: updateLocalStorage(),
+        })
+      );
+    } else {
+      updateLocalStorage();
+    }
+  };
+
+  const updateLocalStorage = () => {
+    const updated = isFavourite
+      ? favouriteIds.filter((id) => id !== event.id)
+      : [...favouriteIds, event.id];
+    localStorage.setItem("guest_favourites", JSON.stringify(updated));
+    return updated;
+  };
   return (
     <View style={styles.card}>
       <Image source={{ uri: imageUrl }} style={styles.image} />
@@ -18,6 +51,13 @@ const EventCard = ({ event }: Props) => {
         {event._embedded?.venues?.[0]?.name},{" "}
         {event._embedded?.venues?.[0]?.city?.name}
       </Text>
+      <TouchableOpacity onPress={toggle}>
+        <Ionicons
+          name={isFavourite ? "heart" : "heart-outline"}
+          size={24}
+          color="red"
+        />
+      </TouchableOpacity>
     </View>
   );
 };
