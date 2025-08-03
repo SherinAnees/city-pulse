@@ -9,6 +9,7 @@ export default function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        tabBarHideOnKeyboard: false,
         tabBarIcon: ({ color, size, focused }) => {
           let iconName: string | any;
 
@@ -20,11 +21,26 @@ export default function TabNavigator() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
+        headerShown: true,
+        tabBarStyle: {
+          position: "absolute",
+        },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
 
-      <Tab.Screen name="Favorites" component={FavoritesScreen} />
+      <Tab.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={{
+          headerTitle: "My Favorites",
+          headerShown: false,
+        }}
+      />
     </Tab.Navigator>
   );
 }

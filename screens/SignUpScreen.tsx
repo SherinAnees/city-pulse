@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,14 +8,15 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
 import { signupUser } from "../redux/slices/authSlice";
 
 export default function SignupScreen({ navigation }: any) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch<AppDispatch>();
   const handleSignup = async () => {
     try {
@@ -27,7 +28,11 @@ export default function SignupScreen({ navigation }: any) {
       console.error("Login failed:", error);
     }
   };
-
+  useEffect(() => {
+    if (user) {
+      navigation.replace("Home");
+    }
+  }, [user]);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>

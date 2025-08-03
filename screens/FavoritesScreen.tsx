@@ -46,6 +46,7 @@ export default function FavoritesScreen() {
       data={events}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => <EventCard event={item} />}
+      contentContainerStyle={{ paddingBottom: 100 }}
     />
   );
 }

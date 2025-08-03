@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,15 +8,15 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../redux/slices/authSlice";
-import { AppDispatch } from "../redux/store";
+import { AppDispatch, RootState } from "../redux/store";
 
 export default function LoginScreen({ navigation }: any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch<AppDispatch>();
-
+  const user = useSelector((state: RootState) => state.auth.user);
   const handleLogin = async () => {
     try {
       const res = await dispatch(loginUser({ email, password })).unwrap();
@@ -25,6 +25,11 @@ export default function LoginScreen({ navigation }: any) {
       console.error("Login failed:", error);
     }
   };
+  useEffect(() => {
+    if (user) {
+      navigation.replace("Home");
+    }
+  }, [user]);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>

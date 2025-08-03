@@ -7,7 +7,7 @@ import {
   FlatList,
   RefreshControl,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
 import { logoutUser } from "../redux/slices/authSlice";
@@ -15,6 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import SearchBar from "../components/SearchBar";
 import EventCard from "../components/EventCard";
 import { useFetchEvents } from "../hooks/useFetchEvents";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeScreen({ navigation }: any) {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,16 +26,31 @@ export default function HomeScreen({ navigation }: any) {
     await dispatch(logoutUser());
     navigation.replace("Splash");
   };
-  console.log(user);
+  const handleLogin = () => {
+    navigation.replace("Login");
+  };
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.navigate("Splash")}>
+          <Ionicons name="arrow-back" size={24} style={{ marginLeft: 15 }} />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.welcomeText}>
           Welcome {user?.name ? user.name : "Guest"} !
         </Text>
-        {user && (
+        {user ? (
           <TouchableOpacity onPress={handleLogout}>
             <Text style={styles.logout}>Logout</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={handleLogin}>
+            <Text style={styles.login}>Login</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -48,6 +64,7 @@ export default function HomeScreen({ navigation }: any) {
           data={events}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <EventCard event={item} />}
+          contentContainerStyle={{ paddingBottom: 100 }}
           refreshControl={
             <RefreshControl refreshing={loading} onRefresh={refetchEvents} />
           }
@@ -74,6 +91,14 @@ const styles = StyleSheet.create({
   logout: {
     fontSize: 16,
     color: "red",
+    padding: 2,
+    outlineColor: "red",
+  },
+  login: {
+    fontSize: 16,
+    color: "green",
+    padding: 2,
+    outlineColor: "green",
   },
   list: {
     padding: 16,

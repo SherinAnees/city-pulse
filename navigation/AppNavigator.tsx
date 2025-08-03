@@ -8,11 +8,13 @@ import LoginScreen from "../screens/LoginScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import HomeScreen from "../screens/HomeScreen";
 import SignupScreen from "../screens/SignupScreen";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
+  const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
   useEffect(() => {
     const guestFaves = JSON.parse(
@@ -23,9 +25,15 @@ export default function AppNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Splash" component={SplashScreen} />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Signup" component={SignupScreen} />
-      <Stack.Screen name="Home" component={TabNavigator} />
+
+      {!user ? (
+        <>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Signup" component={SignupScreen} />
+        </>
+      ) : (
+        <Stack.Screen name="Home" component={TabNavigator} />
+      )}
     </Stack.Navigator>
   );
 }
