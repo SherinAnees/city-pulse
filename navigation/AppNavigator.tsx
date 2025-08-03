@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import SplashScreen from "../screens/SplashScreen";
 import LoginScreen from "../screens/LoginScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import SignupScreen from "../screens/SignupScreen";
 import HomeScreen from "../screens/HomeScreen";
+import SignupScreen from "../screens/SignUpScreen";
 
 const Stack = createNativeStackNavigator();
 
