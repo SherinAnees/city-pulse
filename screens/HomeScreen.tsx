@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +20,7 @@ export default function HomeScreen({ navigation }: any) {
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.auth.user);
   const [keyword, setKeyword] = useState("");
-  const { events, loading } = useFetchEvents(keyword);
+  const { events, loading, refetchEvents } = useFetchEvents(keyword);
   const handleLogout = async () => {
     await dispatch(logoutUser());
     navigation.replace("Splash");
@@ -47,7 +48,14 @@ export default function HomeScreen({ navigation }: any) {
           data={events}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <EventCard event={item} />}
-          contentContainerStyle={styles.list}
+          refreshControl={
+            <RefreshControl refreshing={loading} onRefresh={refetchEvents} />
+          }
+          ListEmptyComponent={
+            !loading ? (
+              <Text style={styles.loadingText}>No events found</Text>
+            ) : null
+          }
         />
       )}
     </SafeAreaView>

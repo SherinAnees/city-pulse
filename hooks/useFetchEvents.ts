@@ -1,13 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { TICKETMASTER_BASE_URL, TICKETMASTER_API_PARAMS } from '../constants';
 import { EventItem } from '../types/event';
 
 export const useFetchEvents = (keyword = '') => {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchEvents = async () => {
+const fetchEvents = async () => {
       setLoading(true);
       try {
         const res = await fetch(`${TICKETMASTER_BASE_URL}?keyword=${keyword}${TICKETMASTER_API_PARAMS}`);
@@ -21,8 +19,13 @@ export const useFetchEvents = (keyword = '') => {
       }
     };
 
+const refetchEvents=useCallback(()=>{
+    fetchEvents();
+},[keyword])
+  useEffect(() => {
+    
     fetchEvents();
   }, [keyword]);
 
-  return { events, loading };
+  return { events, loading ,refetchEvents};
 };
