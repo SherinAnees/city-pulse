@@ -8,7 +8,7 @@ const firebaseConfig = {
   storageBucket: "city-pulse-d68d4.firebasestorage.app",
   messagingSenderId: "623279986666",
   appId: "1:623279986666:web:6ff5f75a8a5c2269e6c493"
-};
+}
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

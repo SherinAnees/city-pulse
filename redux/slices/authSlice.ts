@@ -48,7 +48,7 @@ export const loginUser = createAsyncThunk(
     return {
       uid: user.uid,
       email: user.email || "",
-      name: userData?.name || "User",
+      name: userData?.name || "Guest",
     };
   }
 );
