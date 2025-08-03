@@ -8,6 +8,7 @@ import {
   toggleFavourite,
 } from "../redux/slices/favouriteSlice";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Props {
   event: EventItem;
@@ -39,7 +40,7 @@ const EventCard = ({ event }: Props) => {
     const updated = isFavourite
       ? favouriteIds.filter((id) => id !== event.id)
       : [...favouriteIds, event.id];
-    localStorage.setItem("guest_favourites", JSON.stringify(updated));
+    AsyncStorage.setItem("guest_favourites", JSON.stringify(updated));
     return updated;
   };
   return (

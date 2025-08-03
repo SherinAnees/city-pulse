@@ -6,6 +6,7 @@ import { EventItem } from "../types/event";
 import { fetchFavouritesFromFirestore } from "../redux/slices/favouriteSlice";
 import { TICKETMASTER_API_PARAMS, TICKETMASTER_BASE_URL } from "../constants";
 import { FlatList } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function FavoritesScreen() {
   const dispatch = useDispatch<AppDispatch>();
@@ -14,16 +15,25 @@ export default function FavoritesScreen() {
     (state: RootState) => state.favourites.favouriteIds
   );
   const [events, setEvents] = useState<EventItem[]>([]);
-
   useEffect(() => {
-    if (user) {
-      dispatch(fetchFavouritesFromFirestore(user.uid));
-    } else {
-      const localFaves = JSON.parse(
-        localStorage.getItem("guest_favourites") || "[]"
-      );
-      dispatch({ type: "favourites/fetch/fulfilled", payload: localFaves });
-    }
+    const loadFavourites = async () => {
+      if (user) {
+        dispatch(fetchFavouritesFromFirestore(user.uid));
+      } else {
+        try {
+          const localFaves = await AsyncStorage.getItem("guest_favourites");
+          const parsedFaves = localFaves ? JSON.parse(localFaves) : [];
+          dispatch({
+            type: "favourites/fetch/fulfilled",
+            payload: parsedFaves,
+          });
+        } catch (error) {
+          console.error("Failed to load guest favourites", error);
+        }
+      }
+    };
+
+    loadFavourites();
   }, [user]);
 
   useEffect(() => {

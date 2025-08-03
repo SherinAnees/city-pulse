@@ -17,23 +17,29 @@ export default function AppNavigator() {
   const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
   useEffect(() => {
-    const guestFaves = JSON.parse(
-      localStorage.getItem("guest_favourites") || "[]"
-    );
-    dispatch({ type: "favourites/fetch/fulfilled", payload: guestFaves });
+    const loadGuestFavourites = async () => {
+      try {
+        const guestFaves = await AsyncStorage.getItem("guest_favourites");
+        if (guestFaves) {
+          const parsed = JSON.parse(guestFaves);
+          dispatch({ type: "favourites/fetch/fulfilled", payload: guestFaves });
+        }
+      } catch (err) {
+        console.error("Failed to load guest favourites", err);
+      }
+    };
+
+    loadGuestFavourites();
   }, []);
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Splash" component={SplashScreen} />
 
-      {!user ? (
-        <>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Signup" component={SignupScreen} />
-        </>
-      ) : (
-        <Stack.Screen name="Home" component={TabNavigator} />
-      )}
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Signup" component={SignupScreen} />
+
+      <Stack.Screen name="Home" component={TabNavigator} />
     </Stack.Navigator>
   );
 }
