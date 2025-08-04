@@ -16,6 +16,7 @@ import SearchBar from "../components/SearchBar";
 import EventCard from "../components/EventCard";
 import { useFetchEvents } from "../hooks/useFetchEvents";
 import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function HomeScreen({ navigation }: any) {
   const dispatch = useDispatch<AppDispatch>();
@@ -45,12 +46,24 @@ export default function HomeScreen({ navigation }: any) {
           Welcome {user?.name ? user.name : "Guest"} !
         </Text>
         {user ? (
-          <TouchableOpacity onPress={handleLogout}>
-            <Text style={styles.logout}>Logout</Text>
+          <TouchableOpacity style={styles.authButton} onPress={handleLogout}>
+            <FontAwesome5
+              name="sign-out-alt"
+              size={18}
+              color="#333"
+              style={styles.icon}
+            />
+            <Text style={styles.authButtonText}>Logout</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity onPress={handleLogin}>
-            <Text style={styles.login}>Login</Text>
+          <TouchableOpacity style={styles.authButton} onPress={handleLogin}>
+            <FontAwesome5
+              name="sign-in-alt"
+              size={18}
+              color="#333"
+              style={styles.icon}
+            />
+            <Text style={styles.authButtonText}>Login</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -113,5 +126,26 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
     fontSize: 16,
+  },
+  authButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f0f0f0",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    marginTop: 10,
+  },
+
+  authButtonText: {
+    fontSize: 16,
+    color: "#333",
+    marginLeft: 6,
+  },
+
+  icon: {
+    marginRight: 4,
   },
 });

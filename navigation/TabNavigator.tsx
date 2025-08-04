@@ -33,14 +33,7 @@ export default function TabNavigator() {
         options={{ headerShown: false }}
       />
 
-      <Tab.Screen
-        name="Favorites"
-        component={FavoritesScreen}
-        options={{
-          headerTitle: "My Favorites",
-          headerShown: false,
-        }}
-      />
+      <Tab.Screen name="My Favorites" component={FavoritesScreen} />
     </Tab.Navigator>
   );
 }
