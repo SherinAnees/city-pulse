@@ -21,6 +21,8 @@ export default function EventDetailsScreen() {
   const { event } = route.params;
 
   const venue = event._embedded?.venues?.[0];
+  // const latitude = venue?.location?.latitude ? parseFloat(venue.location.latitude) : null;
+  //   const longitude = venue?.location?.longitude ? parseFloat(venue.location.longitude) : null;
 
   return (
     <ScrollView style={styles.container}>
@@ -54,7 +56,24 @@ export default function EventDetailsScreen() {
         </Text>
       </View>
 
-      {/* TODO: Add Map or other content */}
+      {/* Map-Integration */}
+      {/* {latitude && longitude ? (
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude,
+            longitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          }}
+          scrollEnabled={false}
+          zoomEnabled={false}
+        >
+          <Marker coordinate={{ latitude, longitude }} title={venue?.name} />
+        </MapView>
+      ) : (
+        <Text style={styles.noMapText}>Location map not available</Text>
+      )} */}
     </ScrollView>
   );
 }
