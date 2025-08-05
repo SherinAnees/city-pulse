@@ -19,7 +19,7 @@ const EventCard = ({ event, onPress }: Props) => {
   );
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const isFavourite = favouriteEvents.some((fav) => fav.id === event.id);
+  const isFavourite = favouriteEvents?.some((fav) => fav.id === event.id);
 
   const toggle = () => {
     dispatch(toggleFavourite({ event, user }));

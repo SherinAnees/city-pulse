@@ -34,7 +34,7 @@ const FavouriteScreen = () => {
     setTimeout(() => setRefreshing(false), 1000);
   };
 
-  if (favouriteEvents.length === 0) {
+  if (favouriteEvents?.length === 0) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>No favourite events yet.</Text>

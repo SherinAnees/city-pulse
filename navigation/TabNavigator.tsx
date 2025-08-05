@@ -2,10 +2,15 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
 import FavoritesScreen from "../screens/FavoritesScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
+  const user = useSelector((state: RootState) => state.auth.user);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -17,6 +22,10 @@ export default function TabNavigator() {
             iconName = focused ? "home" : "home-outline";
           } else if (route.name === "My Favorites") {
             iconName = focused ? "heart" : "heart-outline";
+          } else if (route.name === "Profile") {
+            iconName = focused ? "person" : "person-outline";
+          } else {
+            iconName = "ellipse";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -32,8 +41,14 @@ export default function TabNavigator() {
         component={HomeScreen}
         options={{ headerShown: false }}
       />
-
       <Tab.Screen name="My Favorites" component={FavoritesScreen} />
+      {user && (
+        <Tab.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{ title: "Profile" }}
+        />
+      )}
     </Tab.Navigator>
   );
 }

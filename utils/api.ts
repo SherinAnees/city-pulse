@@ -1,7 +1,7 @@
-import { TICKETMASTER_API_FAV_BY_ID, TICKETMASTER_API_KEY } from "../constants";
+import {  TICKETMASTER_API_KEY, TICKETMASTER_BASE_URL } from "../constants";
 
-export const fetchEventById = async (id: string) => {
-  const res = await fetch(`${TICKETMASTER_API_FAV_BY_ID}/${id}.json?apikey=${TICKETMASTER_API_KEY}`);
+export const fetchAllEvents = async () => {
+  const res = await fetch(`${TICKETMASTER_BASE_URL}?apikey=${TICKETMASTER_API_KEY}`);
   const data = await res.json();
-  return data;
+  return data._embedded?.events || [];
 };
