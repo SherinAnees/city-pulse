@@ -1,10 +1,11 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../types/types";
+import GradientWrapper from "../components/GradientWrapper";
+import { colors } from "../utils/theme";
 
 type SplashScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -13,12 +14,7 @@ type SplashScreenNavigationProp = NativeStackNavigationProp<
 
 export default function SplashScreen({ navigation }: any) {
   return (
-    <LinearGradient
-      colors={["#06429F", "#9EDBF7"]}
-      style={styles.container}
-      start={{ x: 0.5, y: 0 }}
-      end={{ x: 0.5, y: 1 }}
-    >
+    <GradientWrapper style={styles.container}>
       <FontAwesome5
         name="city"
         size={100}
@@ -37,7 +33,7 @@ export default function SplashScreen({ navigation }: any) {
       >
         <Text style={styles.buttonText}>Get Started</Text>
       </TouchableOpacity>
-    </LinearGradient>
+    </GradientWrapper>
   );
 }
 
@@ -54,24 +50,24 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "700",
-    color: "#ffffff",
+    color: colors.textPrimary,
     marginBottom: 10,
     textAlign: "center",
   },
   subtitle: {
     fontSize: 18,
-    color: "#f0f0f0",
+    color: colors.textSecondary,
     textAlign: "center",
     marginBottom: 40,
   },
   button: {
-    backgroundColor: "#2c3e50",
+    backgroundColor: colors.buttonBackground,
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 25,
   },
   buttonText: {
-    color: "#ffffff",
+    color: colors.textPrimary,
     fontSize: 18,
     fontWeight: "600",
   },
