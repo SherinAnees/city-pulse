@@ -25,7 +25,10 @@ export default function HomeScreen({ navigation }: any) {
   const [keyword, setKeyword] = useState("");
   const [city, setCity] = useState("");
 
-  const { events, loading, refetchEvents } = useFetchEvents(keyword, city);
+  const { events, loading, refetchEvents, loadMore, hasMore } = useFetchEvents(
+    keyword,
+    city
+  );
 
   const handleLogout = async () => {
     await dispatch(logoutUser());
@@ -34,6 +37,15 @@ export default function HomeScreen({ navigation }: any) {
   const handleLogin = () => {
     navigation.replace("Login");
   };
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (keyword || city) {
+        refetchEvents();
+      }
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [keyword, city]);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
@@ -101,6 +113,12 @@ export default function HomeScreen({ navigation }: any) {
               <Text style={styles.loadingText}>No events found</Text>
             ) : null
           }
+          onEndReached={() => {
+            if (hasMore && !loading) {
+              loadMore();
+            }
+          }}
+          onEndReachedThreshold={0.5}
         />
       )}
     </SafeAreaView>

@@ -5,25 +5,38 @@ import { EventItem } from "../types/event";
 export const useFetchEvents = (keyword = "", city = "") => {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const [initialLoad, setInitialLoad] = useState(true); 
+  const [initialLoad, setInitialLoad] = useState(true);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
-  const fetchEvents = async () => {
+  const fetchEvents = async (reset = false) => {
     setLoading(true);
     try {
-      let url = `${TICKETMASTER_BASE_URL}?apikey=${TICKETMASTER_API_KEY}`;
+      let url = `${TICKETMASTER_BASE_URL}?apikey=${TICKETMASTER_API_KEY}&page=${reset ? 0 : page}`;
 
       if (initialLoad) {
-       
         url += `&countryCode=AE`;
-      } else {//for global
-        if (keyword) url += `&keyword=${keyword}`;
-        if (city) url += `&city=${city}`;
+      } else {
+        if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
+        if (city) url += `&city=${encodeURIComponent(city)}`;
       }
 
       const res = await fetch(url);
       const data = await res.json();
-      const eventList = data?._embedded?.events || [];
-      setEvents(eventList);
+
+      const eventList: EventItem[] = data?._embedded?.events || [];
+      const totalPages = data?.page?.totalPages || 1;
+
+      setEvents(prev =>
+        reset ? eventList : [...prev, ...eventList]
+      );
+
+      setHasMore((reset ? 1 : page + 1) < totalPages);
+      if (reset) {
+        setPage(1);
+      } else {
+        setPage(prev => prev + 1);
+      }
     } catch (error) {
       console.error("Failed to fetch events", error);
     } finally {
@@ -31,14 +44,33 @@ export const useFetchEvents = (keyword = "", city = "") => {
     }
   };
 
+  useEffect(() => {
+    fetchEvents(true);
+  }, []);
+ useEffect(() => {
+    const debounce = setTimeout(() => {
+      if (keyword.trim() === "" && city.trim() === "") {
+        setInitialLoad(true);
+      } else {
+        setInitialLoad(false);
+      }
+      setPage(0);
+      fetchEvents(true);
+    }, 300);
+
+    return () => clearTimeout(debounce);
+  }, [keyword, city]);
   const refetchEvents = useCallback(() => {
-    setInitialLoad(false); 
-    fetchEvents();
+    setInitialLoad(false);
+    setPage(0);
+    fetchEvents(true);
   }, [keyword, city]);
 
-  useEffect(() => {
-    fetchEvents();
-  }, []); 
+  const loadMore = useCallback(() => {
+    if (!loading && hasMore) {
+      fetchEvents();
+    }
+  }, [page, loading, hasMore]);
 
-  return { events, loading, refetchEvents };
+  return { events, loading, refetchEvents, loadMore, hasMore };
 };
