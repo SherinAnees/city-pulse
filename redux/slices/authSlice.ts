@@ -2,9 +2,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  updateProfile
 } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
 
 interface User {
@@ -52,7 +53,20 @@ export const loginUser = createAsyncThunk(
     };
   }
 );
+export const updateUserProfile = createAsyncThunk(
+  'auth/updateProfile',
+  async ({ name, email }: { name: string; email: string }, thunkAPI) => {
+    const user = auth.currentUser;
+    if (user) {
+      await updateProfile(user, { displayName: name });
+      await updateDoc(doc(db, 'users', user.uid), { name, email });
 
+      return { name, email };
+    } else {
+      throw new Error('User not logged in');
+    }
+  }
+);
 export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
   await signOut(auth);
 });
@@ -89,7 +103,22 @@ const authSlice = createSlice({
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
-      });
+      })
+      .addCase(updateUserProfile.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(updateUserProfile.fulfilled, (state, action) => {
+      state.loading = false;
+      if(state.user){
+        state.user.name = action.payload.name;
+        state.user.email = action.payload.email;
+      }
+    })
+    .addCase(updateUserProfile.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message || 'Failed to update profile';
+    });
   },
 });
 

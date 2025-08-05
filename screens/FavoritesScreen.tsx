@@ -1,67 +1,58 @@
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import EventCard from "../components/EventCard";
+import { FlatList, View, Text, RefreshControl } from "react-native";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
-import { EventItem } from "../types/event";
-import { fetchFavouritesFromFirestore } from "../redux/slices/favouriteSlice";
-import { TICKETMASTER_API_PARAMS, TICKETMASTER_BASE_URL } from "../constants";
-import { FlatList } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  fetchFavouritesFromFirestore,
+  fetchFavouritesFromStorage,
+} from "../redux/slices/favouriteSlice";
+import EventCard from "../components/EventCard";
 
-export default function FavoritesScreen({ navigation }: any) {
+const FavouriteScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const user = useSelector((state: RootState) => state.auth.user);
-  const favouriteIds = useSelector(
-    (state: RootState) => state.favourites.favouriteIds
+  const { favouriteEvents } = useSelector(
+    (state: RootState) => state.favourites
   );
-  const [events, setEvents] = useState<EventItem[]>([]);
-  useEffect(() => {
-    const loadFavourites = async () => {
-      if (user) {
-        dispatch(fetchFavouritesFromFirestore(user.uid));
-      } else {
-        try {
-          const localFaves = await AsyncStorage.getItem("guest_favourites");
-          const parsedFaves = localFaves ? JSON.parse(localFaves) : [];
-          dispatch({
-            type: "favourites/fetch/fulfilled",
-            payload: parsedFaves,
-          });
-        } catch (error) {
-          console.error("Failed to load guest favourites", error);
-        }
-      }
-    };
+  const user = useSelector((state: RootState) => state.auth.user);
+  const [refreshing, setRefreshing] = useState(false);
 
-    loadFavourites();
+  const fetchData = () => {
+    if (user) {
+      dispatch(fetchFavouritesFromFirestore(user.uid));
+    } else {
+      dispatch(fetchFavouritesFromStorage());
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, [user]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch(
-        `${TICKETMASTER_BASE_URL}?size=50${TICKETMASTER_API_PARAMS}`
-      );
-      const data = await res.json();
-      const favEvents =
-        data._embedded?.events.filter((ev: any) =>
-          favouriteIds.includes(ev.id)
-        ) || [];
-      setEvents(favEvents);
-    };
-    if (favouriteIds.length > 0) fetchData();
-  }, [favouriteIds]);
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+    setTimeout(() => setRefreshing(false), 1000);
+  };
+
+  if (favouriteEvents.length === 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>No favourite events yet.</Text>
+      </View>
+    );
+  }
 
   return (
     <FlatList
-      data={events}
+      data={favouriteEvents}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <EventCard
-          event={item}
-          onPress={() => navigation.navigate("EventDetail", { event: item })}
-        />
-      )}
-      contentContainerStyle={{ paddingBottom: 100 }}
+      renderItem={({ item }) => <EventCard event={item} />}
+      contentContainerStyle={{ padding: 16 }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     />
   );
-}
+};
+
+export default FavouriteScreen;
