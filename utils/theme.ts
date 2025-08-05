@@ -6,6 +6,8 @@ export const colors = {
   // Text
   textPrimary: "#ffffff",
   textSecondary: "#f0f0f0",
+  primary: "#1E90FF",
+  dark: "#222",
 
   // Buttons
   buttonBackground: "#2c3e50",
@@ -14,4 +16,5 @@ export const colors = {
   // Additional Light Theme Colors
   lightBackground: "#eef6fc",
   lightText: "#4a4a4a",
+  lightBlueBg:"#addeffff"
 };

@@ -15,7 +15,7 @@ export default function TabNavigator() {
 
           if (route.name === "Home") {
             iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "Favorites") {
+          } else if (route.name === "My Favorites") {
             iconName = focused ? "heart" : "heart-outline";
           }
 

@@ -9,12 +9,14 @@ import {
 } from "../redux/slices/favouriteSlice";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { colors } from "../utils/theme";
 
 interface Props {
   event: EventItem;
+  onPress: () => void;
 }
 
-const EventCard = ({ event }: Props) => {
+const EventCard = ({ event, onPress }: Props) => {
   const imageUrl = event.images[0]?.url;
   const dispatch = useDispatch<AppDispatch>();
   const { favouriteIds } = useSelector((state: RootState) => state.favourites);
@@ -44,7 +46,7 @@ const EventCard = ({ event }: Props) => {
     return updated;
   };
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <Image source={{ uri: imageUrl }} style={styles.image} />
       <Text style={styles.title}>{event.name}</Text>
       <Text style={styles.date}>{event?.dates?.start?.localDate}</Text>
@@ -59,7 +61,7 @@ const EventCard = ({ event }: Props) => {
           color="red"
         />
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -86,6 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginTop: 8,
+    color: colors.dark,
   },
   date: {
     color: "#555",

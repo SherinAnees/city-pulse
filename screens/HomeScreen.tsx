@@ -17,12 +17,16 @@ import EventCard from "../components/EventCard";
 import { useFetchEvents } from "../hooks/useFetchEvents";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { colors } from "../utils/theme";
 
 export default function HomeScreen({ navigation }: any) {
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.auth.user);
   const [keyword, setKeyword] = useState("");
-  const { events, loading, refetchEvents } = useFetchEvents(keyword);
+  const [city, setCity] = useState("");
+
+  const { events, loading, refetchEvents } = useFetchEvents(keyword, city);
+
   const handleLogout = async () => {
     await dispatch(logoutUser());
     navigation.replace("Splash");
@@ -67,8 +71,12 @@ export default function HomeScreen({ navigation }: any) {
           </TouchableOpacity>
         )}
       </View>
-
-      <SearchBar keyword={keyword} setKeyword={setKeyword} />
+      <SearchBar
+        keyword={keyword}
+        setKeyword={setKeyword}
+        city={city}
+        setCity={setCity}
+      />
 
       {loading ? (
         <Text style={styles.loadingText}>Loading events...</Text>
@@ -76,7 +84,14 @@ export default function HomeScreen({ navigation }: any) {
         <FlatList
           data={events}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <EventCard event={item} />}
+          renderItem={({ item }) => (
+            <EventCard
+              event={item}
+              onPress={() =>
+                navigation.navigate("EventDetail", { event: item })
+              }
+            />
+          )}
           contentContainerStyle={{ paddingBottom: 100 }}
           refreshControl={
             <RefreshControl refreshing={loading} onRefresh={refetchEvents} />
@@ -95,7 +110,7 @@ export default function HomeScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: colors.lightBlueBg,
   },
   welcomeText: {
     fontSize: 18,

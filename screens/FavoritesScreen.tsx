@@ -8,7 +8,7 @@ import { TICKETMASTER_API_PARAMS, TICKETMASTER_BASE_URL } from "../constants";
 import { FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function FavoritesScreen() {
+export default function FavoritesScreen({ navigation }: any) {
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.auth.user);
   const favouriteIds = useSelector(
@@ -55,7 +55,12 @@ export default function FavoritesScreen() {
     <FlatList
       data={events}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <EventCard event={item} />}
+      renderItem={({ item }) => (
+        <EventCard
+          event={item}
+          onPress={() => navigation.navigate("EventDetail", { event: item })}
+        />
+      )}
       contentContainerStyle={{ paddingBottom: 100 }}
     />
   );

@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
-import EventDetailsScreen from "../screens/EventDetailsScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import { useEffect, useState } from "react";
 import SplashScreen from "../screens/SplashScreen";
@@ -10,8 +9,10 @@ import HomeScreen from "../screens/HomeScreen";
 import SignupScreen from "../screens/SignupScreen";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { RootStackParamList } from "../types/types";
+import EventDetailsScreen from "../screens/EventDetailsScreen";
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppNavigator() {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -40,6 +41,11 @@ export default function AppNavigator() {
       <Stack.Screen name="Signup" component={SignupScreen} />
 
       <Stack.Screen name="Home" component={TabNavigator} />
+      <Stack.Screen
+        name="EventDetail"
+        component={EventDetailsScreen}
+        options={{ title: "Event Details" }}
+      />
     </Stack.Navigator>
   );
 }

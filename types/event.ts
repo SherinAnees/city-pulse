@@ -10,4 +10,5 @@ export interface EventItem {
   _embedded?: {
     venues: { name: string; city: { name: string } }[];
   };
+  info:string;
 }
