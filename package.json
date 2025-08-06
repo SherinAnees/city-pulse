@@ -21,10 +21,13 @@
     "@reduxjs/toolkit": "^2.8.2",
     "expo": "~53.0.20",
     "expo-linear-gradient": "~14.1.5",
+    "expo-localization": "~16.1.6",
     "expo-status-bar": "~2.2.3",
     "firebase": "^12.0.0",
+    "i18next": "^25.3.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-i18next": "^15.6.1",
     "react-native": "0.79.5",
     "react-native-dotenv": "^3.4.11",
     "react-native-gesture-handler": "~2.24.0",
@@ -33,7 +36,8 @@
     "react-native-screens": "~4.11.1",
     "react-native-vector-icons": "^10.3.0",
     "react-native-web": "^0.20.0",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "expo-updates": "~0.28.17"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

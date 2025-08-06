@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   RefreshControl,
+  I18nManager,
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,13 +19,15 @@ import { useFetchEvents } from "../hooks/useFetchEvents";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { colors } from "../utils/theme";
+import LanguageToggle from "../components/LanguageToggle";
+import { useTranslation } from "react-i18next";
 
 export default function HomeScreen({ navigation }: any) {
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.auth.user);
   const [keyword, setKeyword] = useState("");
   const [city, setCity] = useState("");
-
+  const { t } = useTranslation();
   const { events, loading, refetchEvents, loadMore, hasMore } = useFetchEvents(
     keyword,
     city
@@ -57,12 +60,25 @@ export default function HomeScreen({ navigation }: any) {
   }, [navigation]);
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+      <View
+        style={[
+          styles.header,
+          { flexDirection: I18nManager.isRTL ? "row-reverse" : "row" },
+        ]}
+      >
         <Text style={styles.welcomeText}>
-          Welcome {user?.name ? user.name : "Guest"} !
+          <Text>
+            {t("welcome")} {user?.name ?? t("guest")} !
+          </Text>
         </Text>
         {user ? (
-          <TouchableOpacity style={styles.authButton} onPress={handleLogout}>
+          <TouchableOpacity
+            style={[
+              styles.authButton,
+              { flexDirection: I18nManager.isRTL ? "row-reverse" : "row" },
+            ]}
+            onPress={handleLogout}
+          >
             <FontAwesome5
               name="sign-out-alt"
               size={18}
@@ -72,16 +88,23 @@ export default function HomeScreen({ navigation }: any) {
             <Text style={styles.authButtonText}>Logout</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.authButton} onPress={handleLogin}>
+          <TouchableOpacity
+            style={[
+              styles.authButton,
+              { flexDirection: I18nManager.isRTL ? "row-reverse" : "row" },
+            ]}
+            onPress={handleLogin}
+          >
             <FontAwesome5
               name="sign-in-alt"
               size={18}
               color="#333"
               style={styles.icon}
             />
-            <Text style={styles.authButtonText}>Login</Text>
+            <Text style={styles.authButtonText}>{t("login")}</Text>
           </TouchableOpacity>
         )}
+        <LanguageToggle />
       </View>
       <SearchBar
         keyword={keyword}

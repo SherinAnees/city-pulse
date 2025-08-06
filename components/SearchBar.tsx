@@ -14,7 +14,7 @@ const SearchBar = ({ keyword, setKeyword, city, setCity }: Props) => {
       <TextInput
         value={keyword}
         onChangeText={setKeyword}
-        placeholder="Search by event name"
+        placeholder="Search by event "
         style={styles.input}
       />
       <TextInput
