@@ -24,7 +24,6 @@ Profile screen option to update the user informations (name and email)
 
 Splash screen and Clean UI
 
-
 ## Tech Stack
 
 React Native (Expo)
@@ -59,10 +58,10 @@ Ticketmaster Discovery API
    # or
    yarn install
    ```
+
 3. Add Environmen Variables:
 
    This project uses `constants/index.ts` to store environment values. You must replace the placeholder values with your actual API keys and Firebase configuration.
-
 
    ```constants\index.ts
    export const TICKETMASTER_BASE_URL = 'https://app.ticketmaster.com/discovery/v2/events.json';
@@ -76,14 +75,14 @@ Ticketmaster Discovery API
     export const FIREBASE_APP_ID=""
    ```
 
-5. Running the Project:
+4. Running the Project:
 
-  To start the app locally on an emulator or physical device:
+To start the app locally on an emulator or physical device:
 
-   ```bash
-   npx expo start
-  
-   ```
+```bash
+npx expo start
+
+```
 
 Scan the QR code using the Expo Go app or run it on an emulator via the terminal.
 
@@ -94,9 +93,10 @@ Scan the QR code using the Expo Go app or run it on an emulator via the terminal
 -No backend was used; the app fetches all event data from the public Ticketmaster Discovery API.
 
 -The app uses `constants/index.ts` instead of `.env ` due to Expo limitations with .env files in bare React Native setups.
- ## Bonus Implementations
 
- ✅ Firebase Authentication (Email/Password)
+## Bonus Implementations
+
+✅ Firebase Authentication (Email/Password)
 
 ✅ Firestore integration for storing favorite events
 
@@ -104,7 +104,7 @@ Scan the QR code using the Expo Go app or run it on an emulator via the terminal
 
 ✅ Reusable hooks for auth and event logic
 
-##  Run on Web (optional)
+## Run on Web (optional)
 
 If you want to test via browser (limited support) :
 
@@ -113,6 +113,7 @@ If you want to test via browser (limited support) :
 npx expo start --web
 
 ```
+
 ## Screenshots
 
 ### Splash screen
@@ -121,33 +122,33 @@ npx expo start --web
 
 ### Login Screen
 
-![Login Screen](public/screenshots/login.jpg)
+![Login Screen](assets/screenshots/login.jpg)
 
 ### Signup screen
 
-![Signup Screen](public/screenshots/signup.jpg)
+![Signup Screen](assets/screenshots/signup.jpg)
 
 ### Events screen-with search and Language Toggle
 
-![Event Screen-user](public/screenshots/page%20not%20found.png)
-![Event Screen-guest](public/screenshots/page%20not%20found.png)
+![Event Screen-user](assets/screenshots/user-home.jpg)
+![Event Screen-guest](assets/screenshots/guest-home.jpg)
 
-![Event screen-search](public/screenshots/page%20not%20found.png)
-![Language-toggle](public/screenshots/page%20not%20found.png)
-
+![Event screen-search](assets/screenshots/searh.jpg)
+![Language-toggle](assets/screenshots/language%20toggle.png)
 
 ### Event Details screen
 
-![Event details](public/screenshots/page%20not%20found.png)
+![Event details](assets/screenshots/event-details.jpg)
 
 ### Favourite screen
 
-![Fav screen-user](public/screenshots/page%20not%20found.png)
-![Fav screen-guest](public/screenshots/page%20not%20found.png)
+![Fav screen-user](assets/screenshots/fav-user.jpg)
+![Fav screen-guest](assets/screenshots/fav-guest.jpg)
 
 ### Profile screen
 
-![Profile screen](public/screenshots/page%20not%20found.png)
+![Profile screen](assets/screenshots/profile-edit.jpg)
+
 ## Conclusion
 
 City Pulse demonstrates a complete React Native application architecture with real-world features such as API integration, authentication, state management, theming, and localization. It highlights best practices in modular design, RTL support, and scalable code structure. This project reflects strong proficiency in React Native, Firebase, and mobile UI/UX principles.
