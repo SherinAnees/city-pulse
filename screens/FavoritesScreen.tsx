@@ -7,6 +7,7 @@ import {
   fetchFavouritesFromStorage,
 } from "../redux/slices/favouriteSlice";
 import EventCard from "../components/EventCard";
+import { colors } from "../utils/theme";
 
 const FavouriteScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -36,7 +37,13 @@ const FavouriteScreen = () => {
 
   if (favouriteEvents?.length === 0) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Text>No favourite events yet.</Text>
       </View>
     );
@@ -47,7 +54,9 @@ const FavouriteScreen = () => {
       data={favouriteEvents}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => <EventCard event={item} />}
-      contentContainerStyle={{ padding: 16 }}
+      contentContainerStyle={{
+        padding: 16,
+      }}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
